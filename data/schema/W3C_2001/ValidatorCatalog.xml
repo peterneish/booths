@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSPY v2004 beta 1 U (http://www.xmlspy.com) by John D Judy (Altova) -->
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" xmlns:spy="http://www.altova.com/catalog_ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:entity:xmlns:xml:catalog
+Catalog.xsd">
+	<!-- W3C schema for schemas (with namespaces)-->	
+	<uri name="http://www.w3.org/2001/XMLSchema" uri="altova://ystream/XMLSchema.xsd"/>
+	<uri name="http://www.w3.org/XML/1998/namespace" uri="altova://ystream/xml.xsd"/>
+	<public publicId="-//W3C//DTD XMLSCHEMA 200102//EN" uri="altova://ystream/XMLSchema.dtd"/>
+	<public publicId="datatypes" uri="altova://ystream/datatypes.dtd"/>
+</catalog>

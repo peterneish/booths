@@ -1,0 +1,1695 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2009 (http://www.altova.com) by IT Applications (Australian Electoral Commission) -->
+<xs:schema xmlns="http://www.aec.gov.au/xml/schema/mediafeed" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:eml="urn:oasis:names:tc:evs:schema:eml" targetNamespace="http://www.aec.gov.au/xml/schema/mediafeed" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:import namespace="urn:oasis:names:tc:evs:schema:eml" schemaLocation="../eml/emlcore-v5-0.xsd"/>
+	<xs:element name="CoalitionIdentifier" type="CoalitionIdentifierStructure">
+		<xs:annotation>
+			<xs:documentation>Unique identifier for a coalition (major party or party grouping)</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="Enrolment" type="EnrolmentStructure">
+		<xs:annotation>
+			<xs:documentation>The total number of electors enrolled to vote. This value is the enrolment at the close of rolls  plus reinstatements, plus notebook roll additions, less notebook roll deletions.</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="Formal" type="VotesStructure">
+		<xs:annotation>
+			<xs:documentation>The total number of formal votes recorded</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="GroupIndentifier" type="SenateGroupIdentifierStructure">
+		<xs:annotation>
+			<xs:documentation>Identifier for a Senate group</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="Informal" type="VotesStructure">
+		<xs:annotation>
+			<xs:documentation>The total number of informal votes recorded</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="PartyGroupIdentifier" type="PartyGroupIdentifierStructure">
+		<xs:annotation>
+			<xs:documentation>Identification of a party grouping</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="PollingDistrictIdentifier" type="PollingDistrictIdentifierStructure">
+		<xs:annotation>
+			<xs:documentation>Unique identifier for a polling district. A polling district may also be known as an electorate or division</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="PollingPlaceIdentifier" type="PollingPlaceIdentifierStructure">
+		<xs:annotation>
+			<xs:documentation>Unique identifier for a polling place.</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="StateIdentifier" type="StateIdentifierStructure">
+		<xs:annotation>
+			<xs:documentation>Element that represents an Australian state</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="Total" type="VotesStructure">
+		<xs:annotation>
+			<xs:documentation>The total number of votes</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="CoalitionIdentifierStructure">
+		<xs:annotation>
+			<xs:documentation>Complex type to identify a coalition</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="CoalitionName" type="xs:token" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>The full name of the coalition</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="Id" type="xs:NMTOKEN" use="required">
+			<xs:annotation>
+				<xs:documentation>Unique ID of the coalition</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="DisplayOrder" type="xs:positiveInteger">
+			<xs:annotation>
+				<xs:documentation>The order in which coalitions should be displayed</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="ShortCode" type="xs:NMTOKEN">
+			<xs:annotation>
+				<xs:documentation>Short code used to identify the coalition</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="EnrolmentStructure">
+		<xs:annotation>
+			<xs:documentation>The total number of electors enrolled to vote. This value is the enrolment at the close of rolls  plus reinstatements, plus notebook roll additions, less notebook roll deletions.</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="xs:nonNegativeInteger">
+				<xs:attribute name="CloseOfRolls" type="xs:nonNegativeInteger">
+					<xs:annotation>
+						<xs:documentation>The number of electors enrolled to vote at the close of rolls. (Not included in lightweight feeds)</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="Historic" type="xs:nonNegativeInteger">
+					<xs:annotation>
+						<xs:documentation>The total number of electors enrolled to vote at the last election. (Not included in lightweight feeds)</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="EventResultsStructure">
+		<xs:annotation>
+			<xs:documentation>Complex type to represent the results for an event</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element ref="eml:EventIdentifier"/>
+			<xs:element name="Election" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Information and results are provided for each election</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element ref="eml:ElectionIdentifier"/>
+						<xs:choice>
+							<xs:annotation>
+								<xs:documentation>The type of election results provided is determined by the ElectionCategory of the ElectionIdenitifer element</xs:documentation>
+							</xs:annotation>
+							<xs:element name="House" type="HouseMediaFeedStructure">
+								<xs:annotation>
+									<xs:documentation>Media feed for a House of Representatives election (preferential voting system)</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="Senate" type="SenateMediaFeedStructure">
+								<xs:annotation>
+									<xs:documentation>Media feed for a Senate election (proportional representation system).</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="Referendum" type="ReferendumMediaFeedStructure">
+								<xs:annotation>
+									<xs:documentation>Media feed for a Referendum or Plebiscite election</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:any namespace="##other" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>Allows for customisation of the media feed</xs:documentation>
+								</xs:annotation>
+							</xs:any>
+						</xs:choice>
+					</xs:sequence>
+					<xs:attribute name="Updated" type="xs:dateTime">
+						<xs:annotation>
+							<xs:documentation>Indicates the date and time the election results were last updated. If the attribute is not supplied no results have been returned.</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="Messages" type="eml:MessagesStructure" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>The messages can be used to send adhoc information to the media. For example, the messages might be used to relay information in the event of the media feed system being offline (indicated by the SystemStatus attribute of the MediaFeed element being offline).</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:any namespace="##other" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Allows for customisation of the media feed</xs:documentation>
+				</xs:annotation>
+			</xs:any>
+		</xs:sequence>
+		<xs:attribute name="Updated" type="xs:dateTime">
+			<xs:annotation>
+				<xs:documentation>Indicates the date and time that the results for the event  were last updated. If the attribute is not supplied no results have been returned.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="Phase" type="ElectionPhaseType" use="required">
+			<xs:annotation>
+				<xs:documentation>Indicates the phase of the electoral event, for example Election Night, Post Election or Final Results</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="Verbosity" type="MessageVerbosityType" use="required">
+			<xs:annotation>
+				<xs:documentation>Indicates if the message contains candidate names, candidate affiliations, polling place names, contest names,  historical votes, aggregated votes, votes calculations and anylsis information.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="Granularity" type="MessageGranularityType" use="required">
+			<xs:annotation>
+				<xs:documentation>Indicates the granularity of information supplied in the message.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="HouseCandidateResultsStructure">
+		<xs:annotation>
+			<xs:documentation>Complex type to represent the House results for a candidate.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:annotation>
+				<xs:documentation>The CandidateName and KnownAs child elements of the CandidateIdentifier are not included in lightweight feeds. AffiliationIdentifier is not included in lightweight feeds or for candidates who are independent or non-affiliated or at the polling place level in Detailed granularity feeds.</xs:documentation>
+			</xs:annotation>
+			<xs:element ref="eml:CandidateIdentifier"/>
+			<xs:element ref="eml:AffiliationIdentifier" minOccurs="0"/>
+			<xs:element name="BallotPosition" type="xs:nonNegativeInteger" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Inidcates the candidate's position on the ballot paper. For ghost candidates this represents an internal AEC sort order. (Not included at the polling place level in detailed granularity feeds)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Elected" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Indicates that the candidate has been elected at this election. (Not included at the polling place level in detailed granularity feeds)</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="xs:boolean">
+							<xs:attribute name="Historic" type="xs:boolean">
+								<xs:annotation>
+									<xs:documentation>Indicates that the candidate was elected to parliament at the last election. (Not included in lightweight feeds)</xs:documentation>
+								</xs:annotation>
+							</xs:attribute>
+						</xs:extension>
+					</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="Incumbent" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Indicates that the candidate's party (affiliation) is the incumbent party for this contest. This will not reflect the outcome of any redistribution. (Not included in lightweight feeds or at the polling place level in detailed granularity feeds)</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="xs:boolean">
+							<xs:attribute name="Notional" type="xs:boolean" use="required">
+								<xs:annotation>
+									<xs:documentation>Indicates that the candidate's party (affiliation) is the notional  incumbent party for this contest. This will reflect the outcome of any redistribution</xs:documentation>
+								</xs:annotation>
+							</xs:attribute>
+						</xs:extension>
+					</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
+			<xs:group ref="VotesGroup"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="IndependentAttributes">
+			<xs:annotation>
+				<xs:documentation>The attributes to indicate if a candidate is independent or not affiliated to a party. </xs:documentation>
+			</xs:annotation>
+		</xs:attributeGroup>
+	</xs:complexType>
+	<xs:complexType name="HouseFirstPreferencesByPartyGroupStructure">
+		<xs:annotation>
+			<xs:documentation>Complex type to represent First Preference results presented by affiliation</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="PartyGroup" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element ref="PartyGroupIdentifier"/>
+						<xs:group ref="VotesGroup"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="AmalgamatedGhostGroups" type="VotesStructure" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>The amalgamation of party ghosts</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element ref="Formal"/>
+			<xs:element ref="Informal"/>
+			<xs:element ref="Total"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="HouseFirstPreferencesStructure">
+		<xs:annotation>
+			<xs:documentation>Complex type to represent First Preference results</xs:documentation>
+		</xs:annotation>
+		<xs:sequence minOccurs="0">
+			<xs:element name="Candidate" type="HouseCandidateResultsStructure" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>The first preference results for each candidate</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Ghost" type="HouseCandidateResultsStructure" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Results for each ghost (candidates that contested the last election. A ghost may also be used to reflect the outcome of a redistribution). A ghost cannot receive votes but they are used to present swings.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element ref="Formal"/>
+			<xs:element ref="Informal"/>
+			<xs:element ref="Total"/>
+		</xs:sequence>
+		<xs:attribute name="Updated" type="xs:dateTime">
+			<xs:annotation>
+				<xs:documentation>Indicates the date and time these results were last updated. If the attribute is not supplied it indicates that results have not been returned.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="HouseMediaFeedStructure">
+		<xs:annotation>
+			<xs:documentation>Complex type to represent the media feed for a federal House of Representatives election</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Contests">
+				<xs:annotation>
+					<xs:documentation>The results for the election at the contest level.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Contest" maxOccurs="unbounded">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element ref="eml:ContestIdentifier"/>
+									<xs:element ref="PollingDistrictIdentifier" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Identification of the polling district in which the contest was held. For a federal election this relates the contest to the federal division for the contest (Not included in lightweight feeds)</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element ref="Enrolment">
+										<xs:annotation>
+											<xs:documentation>The total number of electors enrolled to vote in the contest. Total enrolment equals the enrolment at the close of rolls  plus reinstatements, plus notebook roll additions, less notebook roll deletions. </xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element name="FirstPreferences">
+										<xs:annotation>
+											<xs:documentation>First preference results for the contest.</xs:documentation>
+										</xs:annotation>
+										<xs:complexType>
+											<xs:complexContent>
+												<xs:extension base="HouseFirstPreferencesStructure">
+													<xs:attributeGroup ref="CountProgressAttributes"/>
+												</xs:extension>
+											</xs:complexContent>
+										</xs:complexType>
+									</xs:element>
+									<xs:element name="TwoCandidatePreferred" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Two candidate preferred result for the contest.  (This element is included in all Federal election feeds it is however optional to support state and territory elections)</xs:documentation>
+										</xs:annotation>
+										<xs:complexType>
+											<xs:complexContent>
+												<xs:extension base="TwoCandidatePreferredStructure">
+													<xs:attributeGroup ref="CountProgressAttributes"/>
+												</xs:extension>
+											</xs:complexContent>
+										</xs:complexType>
+									</xs:element>
+									<xs:element name="TwoPartyPreferred" type="TwoPartyPreferredStructure" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Two party preferred result for the contest.  (This element is included in all Federal election feeds it is however optional to support state and territory elections)</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element name="SeatSafety" type="SeatSafetyStructure" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Indicates the safety of the seat as Safe, Fairly Safe or marginal, using a number of calculation methods. (Not included in lightweight feeds)</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element name="PollingPlaces" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Polling place results and count progress for the contest.  (This element is not included in standard granualrity feeds)</xs:documentation>
+										</xs:annotation>
+										<xs:complexType>
+											<xs:sequence>
+												<xs:element name="PollingPlace" maxOccurs="unbounded">
+													<xs:complexType>
+														<xs:sequence>
+															<xs:element ref="PollingPlaceIdentifier"/>
+															<xs:element name="FirstPreferences" type="HouseFirstPreferencesStructure">
+																<xs:annotation>
+																	<xs:documentation>First Preference results for the polling place. </xs:documentation>
+																</xs:annotation>
+															</xs:element>
+															<xs:element name="TwoCandidatePreferred" type="TwoCandidatePreferredStructure" minOccurs="0">
+																<xs:annotation>
+																	<xs:documentation>Two candidate prefered results for the polling place. (This element is included Federal election feeds it is however optional to support state and territory elections)</xs:documentation>
+																</xs:annotation>
+															</xs:element>
+														</xs:sequence>
+														<xs:attribute name="Updated" type="xs:dateTime">
+															<xs:annotation>
+																<xs:documentation>Indicates the date and time these results were last updated. If the attribute is not supplied it indicates that results have not been returned.</xs:documentation>
+															</xs:annotation>
+														</xs:attribute>
+													</xs:complexType>
+												</xs:element>
+											</xs:sequence>
+										</xs:complexType>
+									</xs:element>
+									<xs:any namespace="##other" minOccurs="0" maxOccurs="unbounded">
+										<xs:annotation>
+											<xs:documentation>Allows for customisation of contest results</xs:documentation>
+										</xs:annotation>
+									</xs:any>
+								</xs:sequence>
+								<xs:attribute name="Updated" type="xs:dateTime">
+									<xs:annotation>
+										<xs:documentation>Indicates the date and time these results were last updated. If the attribute is not supplied it indicates that results have not been returned for this contest.</xs:documentation>
+									</xs:annotation>
+								</xs:attribute>
+								<xs:attribute name="Declared" type="xs:dateTime">
+									<xs:annotation>
+										<xs:documentation>The date and time a winner was delcared for the contest. If the attribute is not supplied the contest has not been declared.</xs:documentation>
+									</xs:annotation>
+								</xs:attribute>
+								<xs:attribute name="Projected" type="xs:boolean">
+									<xs:annotation>
+										<xs:documentation>Indicates that some of the results for the contest are projected using matched historic polling place votes.  If the attribute is not supplied assume results are not projected.</xs:documentation>
+									</xs:annotation>
+								</xs:attribute>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="Analysis" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Analysis of the results including regional aggreations. (Not included in lightweight feeds or elections with an ElectionCategory of ByElection)</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="National">
+							<xs:annotation>
+								<xs:documentation>The results for the election aggregated to the national level</xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element ref="Enrolment"/>
+									<xs:element name="FirstPreferences" type="HouseFirstPreferencesByPartyGroupStructure">
+										<xs:annotation>
+											<xs:documentation>National First Preference results</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element name="TwoPartyPreferred" type="TwoPartyPreferredStructure">
+										<xs:annotation>
+											<xs:documentation>National Two Party Preferred Results</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="States">
+							<xs:annotation>
+								<xs:documentation>The results fo the election aggregated to the state level</xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="State" maxOccurs="unbounded">
+										<xs:complexType>
+											<xs:sequence>
+												<xs:element ref="StateIdentifier">
+													<xs:annotation>
+														<xs:documentation>The state</xs:documentation>
+													</xs:annotation>
+												</xs:element>
+												<xs:element ref="Enrolment"/>
+												<xs:element name="FirstPreferences" type="HouseFirstPreferencesByPartyGroupStructure">
+													<xs:annotation>
+														<xs:documentation>State First Preference Results</xs:documentation>
+													</xs:annotation>
+												</xs:element>
+												<xs:element name="TwoPartyPreferred" type="TwoPartyPreferredStructure">
+													<xs:annotation>
+														<xs:documentation>State Two Party Preferred Results</xs:documentation>
+													</xs:annotation>
+												</xs:element>
+											</xs:sequence>
+										</xs:complexType>
+									</xs:element>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:any namespace="##other" minOccurs="0" maxOccurs="unbounded">
+							<xs:annotation>
+								<xs:documentation>Allows for customisation of the analysis</xs:documentation>
+							</xs:annotation>
+						</xs:any>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="MediaFeedStructure">
+		<xs:annotation>
+			<xs:documentation>Root element of a media feed message</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="ManagingAuthority" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>The organisation managing the election and publishing the Media Feed message</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element ref="eml:AuthorityIdentifier"/>
+						<xs:element ref="eml:ResponsibleOfficer" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="MessageLanguage" type="xs:language" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>The language used in the media feed message </xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MessageGenerator" type="GeneratorStructure" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>The system that generated this media feed message</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Cycle" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>GUID that uniquely identifies the processing cycle in which this message was generated </xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="xs:NMTOKEN">
+							<xs:attribute name="Created" type="xs:dateTime" use="required">
+								<xs:annotation>
+									<xs:documentation>The date and time the processing cycle was created</xs:documentation>
+								</xs:annotation>
+							</xs:attribute>
+						</xs:extension>
+					</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="Id" type="xs:NMTOKEN" use="required">
+			<xs:annotation>
+				<xs:documentation>GUID that uniquely identifies this media feed message</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="Created" type="xs:dateTime" use="required">
+			<xs:annotation>
+				<xs:documentation>The date and time this media feed message was created</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="SchemaVersion" type="xs:NMTOKEN" use="required">
+			<xs:annotation>
+				<xs:documentation>The version number of the schema used to generate this media feed message</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="EmlVersion" type="xs:NMTOKEN" use="required">
+			<xs:annotation>
+				<xs:documentation>The version of the Election Markup Language (EML) standard referenced by this media feed message</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="PartyGroupIdentifierStructure">
+		<xs:annotation>
+			<xs:documentation>Complex type to identify a coalition</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="PartyGroupName" type="xs:token" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>The full name of the party group</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="Id" type="xs:NMTOKEN" use="required">
+			<xs:annotation>
+				<xs:documentation>Unique ID of the party group</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="DisplayOrder" type="xs:positiveInteger">
+			<xs:annotation>
+				<xs:documentation>The order in which party groups should be displayed</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="ShortCode" type="xs:NMTOKEN">
+			<xs:annotation>
+				<xs:documentation>Short code used to identify the party group</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="PollingDistrictIdentifierStructure">
+		<xs:annotation>
+			<xs:documentation>Complex type to indenify a polling district. A polling district is also known as an electorate or division.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Name" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>The name of the polling district</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element ref="StateIdentifier" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>The state in which the polling district is located</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="Id" type="xs:NMTOKEN" use="required">
+			<xs:annotation>
+				<xs:documentation>The unique ID for the polling district</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="DisplayOrder" type="xs:positiveInteger">
+			<xs:annotation>
+				<xs:documentation>The order in which the polling districts should be displayed in a list</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="ShortCode" type="xs:NMTOKEN">
+			<xs:annotation>
+				<xs:documentation>The four letter code used to represent the polling district</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="PollingDistrictListStructure">
+		<xs:annotation>
+			<xs:documentation>List of polling districts for an electoral event</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element ref="eml:EventIdentifier"/>
+			<xs:element name="PollingDistrict" type="PollingDistrictStructure" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="PollingDistrictStructure">
+		<xs:annotation>
+			<xs:documentation>Complex type to represent a polling district also known as an electorate or division.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="PollingDistrictIdentifier" type="PollingDistrictIdentifierStructure">
+				<xs:annotation>
+					<xs:documentation>Identification of the polling district</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NameDerivation" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Describes derivation of the polling district name</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ProductsIndustry" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Describes the major industries in the polling district and the types products produced in the polling district</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Location" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Describes the phyiscal location of the polling district using major land marks like roads or rivers.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Demographic" type="DemographicType">
+				<xs:annotation>
+					<xs:documentation>Indicates if the polling district is located in a metropolitan or rural area</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Area" type="xs:positiveInteger">
+				<xs:annotation>
+					<xs:documentation>The approximate area covered by the polling district in sq Kms</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="PollingPlaces" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Polling place results for the polling district. This element is provided in all Federal election feeds. This element is optional to support state and territory elections where polling place information is not provided.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="PollingPlace" type="PollingPlaceStructure" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="PollingPlaceIdentifierStructure">
+		<xs:annotation>
+			<xs:documentation>Complex type to indenify a polling place</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="PremisesName" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>The name of the premises where the polling place is located.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="Id" type="xs:NMTOKEN" use="required">
+			<xs:annotation>
+				<xs:documentation>The unique ID for the Division allocated by the ELMS system</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="Name" type="xs:string">
+			<xs:annotation>
+				<xs:documentation>The name allocated to the polling place</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="Classification" type="PollingPlaceClassificationType">
+			<xs:annotation>
+				<xs:documentation>Indicates the type of polling place, static, remote mobile, mobile prison or special hospital team. If not supplied assume static.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="ShortCode" type="xs:NMTOKEN">
+			<xs:annotation>
+				<xs:documentation>The short code used to represent a polling place</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="DisplayOrder" type="xs:positiveInteger">
+			<xs:annotation>
+				<xs:documentation>The order in which the polling districts should be displayed in a list</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="PollingPlaceStructure">
+		<xs:annotation>
+			<xs:documentation>Extension of the EML polling place complex type</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="eml:PollingPlaceStructure">
+				<xs:sequence>
+					<xs:element ref="PollingPlaceIdentifier"/>
+					<xs:element ref="eml:ResponsibleOfficer" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="WheelchairAccess" type="WheelChairAccessType" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>Indicates if the polling place has wheelchair access.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ProposalResultsStructure">
+		<xs:annotation>
+			<xs:documentation>Complex type to represent the results for a referendum proposal</xs:documentation>
+		</xs:annotation>
+		<xs:sequence minOccurs="0">
+			<xs:element name="Option" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>The votes recorded for each individual proposal option</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element ref="eml:ReferendumOptionIdentifier"/>
+						<xs:group ref="VotesGroup"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element ref="Formal"/>
+			<xs:element ref="Informal"/>
+			<xs:element ref="Total"/>
+			<xs:element name="Passed" type="xs:boolean" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Idicates if the proposal will pass</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="PassCondition" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>The conditions or rules that must be met for the proposal to pass. For example a majority of electors and majority of states could both be considered pass condiditions for a federal referendum</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="xs:boolean">
+							<xs:attribute name="Id" use="required">
+								<xs:annotation>
+									<xs:documentation>Unique ID for the condition or rule that must be met for the proposal to pass.</xs:documentation>
+								</xs:annotation>
+							</xs:attribute>
+						</xs:extension>
+					</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ReferendumMediaFeedStructure">
+		<xs:annotation>
+			<xs:documentation>Complex type to represent a media feed for a federal referendum election</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Contests">
+				<xs:annotation>
+					<xs:documentation>The results for the referendum at the contest level.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Contest" maxOccurs="unbounded">
+							<xs:annotation>
+								<xs:documentation>Results for the proposal</xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element ref="eml:ContestIdentifier"/>
+									<xs:element ref="eml:ProposalIdentifier"/>
+									<xs:element ref="Enrolment"/>
+									<xs:element name="ProposalResults" type="ProposalResultsStructure">
+										<xs:annotation>
+											<xs:documentation>The results for the proposal</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element name="PollingDistricts">
+										<xs:annotation>
+											<xs:documentation>The results for the proposal at polling district level</xs:documentation>
+										</xs:annotation>
+										<xs:complexType>
+											<xs:sequence>
+												<xs:element name="PollingDistrict" maxOccurs="unbounded">
+													<xs:complexType>
+														<xs:sequence>
+															<xs:element ref="PollingDistrictIdentifier">
+																<xs:annotation>
+																	<xs:documentation>Identification of the polling district</xs:documentation>
+																</xs:annotation>
+															</xs:element>
+															<xs:element ref="Enrolment"/>
+															<xs:element name="ProposalResults">
+																<xs:annotation>
+																	<xs:documentation>The results for the proposal at this polling district.</xs:documentation>
+																</xs:annotation>
+																<xs:complexType>
+																	<xs:complexContent>
+																		<xs:extension base="ProposalResultsStructure">
+																			<xs:attributeGroup ref="CountProgressAttributes"/>
+																		</xs:extension>
+																	</xs:complexContent>
+																</xs:complexType>
+															</xs:element>
+															<xs:element name="PollingPlaces" minOccurs="0">
+																<xs:annotation>
+																	<xs:documentation>The results for the proposal at the polling place level. These results will NOT be provided for a Federal event. The element exists to allow the provision of polling place results in the future if required.</xs:documentation>
+																</xs:annotation>
+																<xs:complexType>
+																	<xs:sequence>
+																		<xs:element name="PollingPlace" maxOccurs="unbounded">
+																			<xs:complexType>
+																				<xs:sequence>
+																					<xs:element ref="PollingPlaceIdentifier"/>
+																					<xs:element name="ProposalResults" type="ProposalResultsStructure">
+																						<xs:annotation>
+																							<xs:documentation>The results for the proposal at this polling place.</xs:documentation>
+																						</xs:annotation>
+																					</xs:element>
+																				</xs:sequence>
+																				<xs:attribute name="Updated" type="xs:dateTime">
+																					<xs:annotation>
+																						<xs:documentation>Indicates the date and time these results were last updated. If the attribute is not supplied no results have been returned.</xs:documentation>
+																					</xs:annotation>
+																				</xs:attribute>
+																			</xs:complexType>
+																		</xs:element>
+																	</xs:sequence>
+																</xs:complexType>
+															</xs:element>
+														</xs:sequence>
+														<xs:attribute name="Updated" type="xs:dateTime">
+															<xs:annotation>
+																<xs:documentation>Indicates the date and time these results were last updated. If the attribute is not supplied no results have been returned.</xs:documentation>
+															</xs:annotation>
+														</xs:attribute>
+													</xs:complexType>
+												</xs:element>
+											</xs:sequence>
+										</xs:complexType>
+									</xs:element>
+									<xs:any namespace="##other" minOccurs="0" maxOccurs="unbounded">
+										<xs:annotation>
+											<xs:documentation>Allows for customisation of contest results</xs:documentation>
+										</xs:annotation>
+									</xs:any>
+								</xs:sequence>
+								<xs:attribute name="Updated" type="xs:dateTime">
+									<xs:annotation>
+										<xs:documentation>Indicates the date and time these results were last updated. If the attribute is not supplied no results have been returned.</xs:documentation>
+									</xs:annotation>
+								</xs:attribute>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="Analysis" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Analysis of the results including regional aggreations. (Not included in lightweight feeds)</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="States">
+							<xs:annotation>
+								<xs:documentation>The results for the proposal at the state level</xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="State" maxOccurs="unbounded">
+										<xs:complexType>
+											<xs:sequence>
+												<xs:element ref="eml:ProposalIdentifier"/>
+												<xs:element ref="StateIdentifier"/>
+												<xs:element ref="Enrolment"/>
+												<xs:element name="ProposalResults" type="ProposalResultsStructure">
+													<xs:annotation>
+														<xs:documentation>The state results for the proposal</xs:documentation>
+													</xs:annotation>
+												</xs:element>
+											</xs:sequence>
+										</xs:complexType>
+									</xs:element>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:any namespace="##other" minOccurs="0" maxOccurs="unbounded">
+							<xs:annotation>
+								<xs:documentation>Allows for customisation of the analysis</xs:documentation>
+							</xs:annotation>
+						</xs:any>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="SeatSafetyStructure">
+		<xs:annotation>
+			<xs:documentation>Indicates the safety of a seat</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Safety" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Indicates the seat safety as safe, fairly safe or marginal when calculated using the calculation method.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="SafetyType">
+							<xs:attribute name="Historic" type="SafetyType" use="required">
+								<xs:annotation>
+									<xs:documentation>Indicates the safety at the last election or redistribution as safe, fairly safe or marginal</xs:documentation>
+								</xs:annotation>
+							</xs:attribute>
+							<xs:attribute name="CalculationMethod" type="SafetyCalculationMethodType" use="required">
+								<xs:annotation>
+									<xs:documentation>Indicates the method used to calculate the seat safety</xs:documentation>
+								</xs:annotation>
+							</xs:attribute>
+						</xs:extension>
+					</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="SenateCandidateResultsStructure">
+		<xs:annotation>
+			<xs:documentation>Complex type to represent senate candidate results</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element ref="eml:CandidateIdentifier"/>
+			<xs:element ref="eml:AffiliationIdentifier" minOccurs="0"/>
+			<xs:element name="BallotPosition" type="xs:nonNegativeInteger" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Inidcates the candidates position on the ballot paper.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Elected" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Indicates that the candidate has been elected.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="xs:boolean">
+							<xs:attribute name="Historic" type="xs:boolean">
+								<xs:annotation>
+									<xs:documentation>Indicates if the candidate was elected at the last election. (Not included in lightweight feeds)</xs:documentation>
+								</xs:annotation>
+							</xs:attribute>
+							<xs:attribute name="Ranking" type="xs:positiveInteger">
+								<xs:annotation>
+									<xs:documentation>Indicates the order in which the candidate was elected. Only displayed when the value of elected is True.</xs:documentation>
+								</xs:annotation>
+							</xs:attribute>
+						</xs:extension>
+					</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="Incumbent" type="xs:boolean" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Indicates that this candidate is the incumbent candidate for this contest. (Not included in lightweight feeds)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:group ref="VotesGroup"/>
+		</xs:sequence>
+		<xs:attributeGroup ref="IndependentAttributes"/>
+	</xs:complexType>
+	<xs:complexType name="SenateFirstPreferencesStructure">
+		<xs:annotation>
+			<xs:documentation>Complex type to represent Senate candidate first preference results</xs:documentation>
+		</xs:annotation>
+		<xs:sequence minOccurs="0">
+			<xs:element name="Group" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>First preference results for one or more senate groups.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="GroupIdentifier" type="SenateGroupIdentifierStructure">
+							<xs:annotation>
+								<xs:documentation>Indentifies the Senate group</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="Candidate" type="SenateCandidateResultsStructure" maxOccurs="unbounded">
+							<xs:annotation>
+								<xs:documentation>Below the line votes for Candidates</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="TicketVotes" type="VotesStructure">
+							<xs:annotation>
+								<xs:documentation>Above the line votes for the group</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="Unapportioned" type="VotesStructure">
+							<xs:annotation>
+								<xs:documentation>Votes for the group that have not been apportioned to Ticket votes or individual candidates</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="GroupVotes" type="VotesStructure">
+							<xs:annotation>
+								<xs:documentation>The total votes received by the Senate group. This is then the sum of Candidate, Ticket Votes and Unapportioned</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="UngroupedCandidate" type="SenateCandidateResultsStructure" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>First preference results for ungrouped candidates if any exist.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element ref="Formal"/>
+			<xs:element ref="Informal"/>
+			<xs:element ref="Total"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="GeneratorStructure">
+		<xs:annotation>
+			<xs:documentation>The system that generated the Media Feed</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Name" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>The name of the Media Feed generator system.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Environment" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>The environment of the generator. For example PRODUCTION, TEST or DEVELOPMENT.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Site" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>The alias of the site where the media feed generator is located</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Server" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>The alias of the server hosting the Media Feed generator.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Platform" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>The hardware architecture of the server. For example x86 or x64</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Version" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>The version of the media feed generator system.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="SenateGroupFirstPreferencesStructure">
+		<xs:annotation>
+			<xs:documentation>Complex type to represent Senate group first preferences </xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="PartyGroup" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>The first preference votes for each senate party grouping</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element ref="PartyGroupIdentifier"/>
+						<xs:group ref="VotesGroup"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="AmalgamatedUngrouped" type="VotesStructure" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>The sum of first preference votes for all ungrouped candidates</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AmalgamatedGhostGroups" type="VotesStructure" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>The results for all ghost groups amalgamated into a single result.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element ref="Formal"/>
+			<xs:element ref="Informal"/>
+			<xs:element ref="Total"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="SenateGroupIdentifierStructure">
+		<xs:annotation>
+			<xs:documentation>Complex type to indenify a Senate Group</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Ticket" type="SenateGroupVotingTicketType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>The two letter code for the Senate Group Voting Ticket</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="GroupName" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>The name of the Senate Group </xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element ref="StateIdentifier" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>The state in which the senate group is registered</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="Id" type="xs:NMTOKEN" use="required">
+			<xs:annotation>
+				<xs:documentation>The unique ID for the Senate group</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="DisplayOrder" type="xs:positiveInteger">
+			<xs:annotation>
+				<xs:documentation>The order in which groups should be displayed in a list</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="ShortCode" type="xs:NMTOKEN">
+			<xs:annotation>
+				<xs:documentation>The short code used to represent the senate group</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="SenateGroupsStructure">
+		<xs:annotation>
+			<xs:documentation>Complex type to define a list of senate groups and ungrouped candidates</xs:documentation>
+		</xs:annotation>
+		<xs:group ref="SenateGroupsGroup"/>
+	</xs:complexType>
+	<xs:complexType name="SenateGroupStructure">
+		<xs:annotation>
+			<xs:documentation>Complex type to respresents senate group</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="GroupIdentifier" type="SenateGroupIdentifierStructure"/>
+			<xs:element name="Candidate" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>The list of candidates in the group</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element ref="eml:CandidateIdentifier"/>
+						<xs:element ref="eml:AffiliationIdentifier" minOccurs="0"/>
+					</xs:sequence>
+					<xs:attributeGroup ref="IndependentAttributes"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="GroupVotingTicket" type="SenateGroupVotingTicketStructure" minOccurs="0" maxOccurs="3">
+				<xs:annotation>
+					<xs:documentation>The group voting ticket(s) for the group. A group may specify up to three group voting tickets</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="SenateGroupVotingTicketStructure">
+		<xs:annotation>
+			<xs:documentation>Complex type to represent a single group voting ticket</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Candidate" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element ref="eml:CandidateIdentifier"/>
+						<xs:element ref="eml:AffiliationIdentifier" minOccurs="0"/>
+						<xs:element name="Preference" type="xs:positiveInteger">
+							<xs:annotation>
+								<xs:documentation>The preference for the candidate.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+					<xs:attributeGroup ref="IndependentAttributes"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="TicketNumber" type="xs:positiveInteger" use="required">
+			<xs:annotation>
+				<xs:documentation>The number of the group voting ticket supplied by the Senate group</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="RemainderOrder" type="xs:nonNegativeInteger">
+			<xs:annotation>
+				<xs:documentation>When a group has supplied multiple tickets this defines the order in which tickets are applied to remainder ballot papers.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="SenateGroupVotingTicketsStructure">
+		<xs:sequence>
+			<xs:element ref="eml:EventIdentifier"/>
+			<xs:element name="Election" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element ref="eml:ElectionIdentifier"/>
+						<xs:element name="Contests">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="Contest" maxOccurs="unbounded">
+										<xs:complexType>
+											<xs:sequence>
+												<xs:element ref="eml:ContestIdentifier"/>
+												<xs:group ref="SenateGroupsGroup"/>
+											</xs:sequence>
+										</xs:complexType>
+									</xs:element>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="SenateMediaFeedStructure">
+		<xs:annotation>
+			<xs:documentation>Complex type to represent the media feed for a federal Senate election</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Contests">
+				<xs:annotation>
+					<xs:documentation>The results for the senate election at the contest level.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Contest" maxOccurs="unbounded">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element ref="eml:ContestIdentifier"/>
+									<xs:element ref="StateIdentifier" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Element that represents an Australian state. (Not included in lightweight feeds)</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element ref="Enrolment"/>
+									<xs:element name="NumberOfPositions" type="xs:positiveInteger">
+										<xs:annotation>
+											<xs:documentation>The number of positions available for this contest.</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element name="Quota">
+										<xs:annotation>
+											<xs:documentation>The quota of votes required to win a seat in the contest</xs:documentation>
+										</xs:annotation>
+										<xs:complexType>
+											<xs:simpleContent>
+												<xs:extension base="xs:nonNegativeInteger">
+													<xs:attribute name="Provisional" type="xs:boolean" use="required">
+														<xs:annotation>
+															<xs:documentation>Indicates if the quota is provisional</xs:documentation>
+														</xs:annotation>
+													</xs:attribute>
+												</xs:extension>
+											</xs:simpleContent>
+										</xs:complexType>
+									</xs:element>
+									<xs:element name="FirstPreferences" type="SenateFirstPreferencesStructure">
+										<xs:annotation>
+											<xs:documentation>First preference results for the contest.</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element name="PollingDistricts" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>The senate results for the contest at the polling district level. (Only included in Detailed granurlarity feeds)</xs:documentation>
+										</xs:annotation>
+										<xs:complexType>
+											<xs:sequence>
+												<xs:element name="PollingDistrict" maxOccurs="unbounded">
+													<xs:complexType>
+														<xs:sequence>
+															<xs:element ref="PollingDistrictIdentifier">
+																<xs:annotation>
+																	<xs:documentation>Unique identifier of the polling district.</xs:documentation>
+																</xs:annotation>
+															</xs:element>
+															<xs:element ref="Enrolment"/>
+															<xs:element name="FirstPreferences" type="SenateFirstPreferencesStructure">
+																<xs:annotation>
+																	<xs:documentation>First preference results for the polling district.</xs:documentation>
+																</xs:annotation>
+															</xs:element>
+															<xs:element name="PollingPlaces" minOccurs="0">
+																<xs:annotation>
+																	<xs:documentation>The senate results for the polling places in the polling district. These results will NOT be provided for a Federal event. The element exists to allow the provision of polling place results in the future if required.</xs:documentation>
+																</xs:annotation>
+																<xs:complexType>
+																	<xs:sequence>
+																		<xs:element name="PollingPlace" maxOccurs="unbounded">
+																			<xs:complexType>
+																				<xs:sequence>
+																					<xs:element ref="PollingPlaceIdentifier"/>
+																					<xs:element name="FirstPreferences" type="SenateFirstPreferencesStructure">
+																						<xs:annotation>
+																							<xs:documentation>First preference results for the polling place. This lement will NOT be provided for a Federal event. The element exists to allow the provision of polling place results in the future if required.</xs:documentation>
+																						</xs:annotation>
+																					</xs:element>
+																				</xs:sequence>
+																				<xs:attribute name="Updated" type="xs:dateTime">
+																					<xs:annotation>
+																						<xs:documentation>The date and time that results for this polling place were last updated. If the attribute is not supplied no results have been returned.</xs:documentation>
+																					</xs:annotation>
+																				</xs:attribute>
+																			</xs:complexType>
+																		</xs:element>
+																	</xs:sequence>
+																</xs:complexType>
+															</xs:element>
+														</xs:sequence>
+														<xs:attribute name="Updated" type="xs:dateTime">
+															<xs:annotation>
+																<xs:documentation>The date and time that results for this polling district were last updated. If the attribute is not supplied no results have been returned.</xs:documentation>
+															</xs:annotation>
+														</xs:attribute>
+													</xs:complexType>
+												</xs:element>
+											</xs:sequence>
+										</xs:complexType>
+									</xs:element>
+									<xs:any namespace="##other" minOccurs="0" maxOccurs="unbounded">
+										<xs:annotation>
+											<xs:documentation>Allows for customisation of contest results</xs:documentation>
+										</xs:annotation>
+									</xs:any>
+								</xs:sequence>
+								<xs:attribute name="Updated" type="xs:dateTime">
+									<xs:annotation>
+										<xs:documentation>The date and time that results for this contest were last updated. If the attribute is not supplied no results have been returned.</xs:documentation>
+									</xs:annotation>
+								</xs:attribute>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="Analysis" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Analysis of the results including regional aggreations. (Not included in lightweight feeds)</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="National">
+							<xs:annotation>
+								<xs:documentation>The results for the Senate election at the state level.</xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element ref="Enrolment"/>
+									<xs:element name="FirstPreferences" type="SenateGroupFirstPreferencesStructure">
+										<xs:annotation>
+											<xs:documentation>The first preference results for the election</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:any namespace="##other" minOccurs="0" maxOccurs="unbounded">
+							<xs:annotation>
+								<xs:documentation>Allows for customisation of the analysis</xs:documentation>
+							</xs:annotation>
+						</xs:any>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="StateIdentifierStructure">
+		<xs:annotation>
+			<xs:documentation>Complex type to represent an australian state</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="StateName" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>The full name of the state or territory. For example New South Wales</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="Id" type="AustralianStateType" use="required">
+			<xs:annotation>
+				<xs:documentation>The two or three letter code for the state or territory. For example NSW</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="DisplayOrder" type="xs:positiveInteger">
+			<xs:annotation>
+				<xs:documentation>The order in which the states should be displayed in a list</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="TwoCandidatePreferredStructure">
+		<xs:annotation>
+			<xs:documentation>Complex type to represent TCP results</xs:documentation>
+		</xs:annotation>
+		<xs:sequence minOccurs="0">
+			<xs:annotation>
+				<xs:documentation>The Two Candidate Preferred results is only included when both the Maverick attribute is false and the Restricted attribute is false.</xs:documentation>
+			</xs:annotation>
+			<xs:element name="Candidate" type="HouseCandidateResultsStructure" minOccurs="2" maxOccurs="2">
+				<xs:annotation>
+					<xs:documentation>Please note: CandidateName, KnownAs and AffiliationIdentifier are not included in lightweight feeds.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="Updated" type="xs:dateTime">
+			<xs:annotation>
+				<xs:documentation>Indicates the date and time these results were last updated. If the attribute is not supplied it indicates that results have not been returned.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="Restricted" type="xs:boolean">
+			<xs:annotation>
+				<xs:documentation>Indicates that the Two Candidate Preferred results are restricted at this time and are unavailable. The AEC does not release the TCP candidates until 6:00pm election night. Before this time all TCP results are restricted. If the attribute is not supplied it indicates that results are not restricted.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="Maverick" type="xs:boolean">
+			<xs:annotation>
+				<xs:documentation>Indicates that the incorrect candidates have been selected for the two candidate preferred count. In this case no TCP results are available. If the attribute is not supplied it indicates that results are not maverick.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="TwoPartyPreferredStructure">
+		<xs:annotation>
+			<xs:documentation>Complex type to represent TPP results</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Coalition" minOccurs="2" maxOccurs="2">
+				<xs:annotation>
+					<xs:documentation>The two party coalitions contesting the Two Party Preferred result</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element ref="CoalitionIdentifier"/>
+						<xs:group ref="VotesGroup"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="VotesStructure">
+		<xs:annotation>
+			<xs:documentation>Simple type to represents a set of results as votes, percentage and swing</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:group ref="VotesGroup"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="VoteStructure">
+		<xs:annotation>
+			<xs:documentation>Simple type to represent votes</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="xs:nonNegativeInteger">
+				<xs:attribute name="Historic" type="xs:nonNegativeInteger">
+					<xs:annotation>
+						<xs:documentation>The number of votes recorded for this type of result at the last election. (Not included in lightweight feeds)</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="Percentage" type="xs:double">
+					<xs:annotation>
+						<xs:documentation>The number of votes expressed as a percentage of the total number of votes. (Not included in lightweight feeds)</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="Swing" type="xs:double">
+					<xs:annotation>
+						<xs:documentation>The swing in the number of votes when compared to last election. (Not included in lightweight feeds)</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="MatchedHistoric" type="xs:nonNegativeInteger">
+					<xs:annotation>
+						<xs:documentation>The number of historic votes recorded for this type of result at the last election for the polling places that have been returned during this election. This figure can be used for matched polling place projections, for example projected TCP percentage.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="MatchedHistoricFirstPrefsIn">
+					<xs:annotation>
+						<xs:documentation>The number of historic votes recorded for this type of result at the last election for the First Preference polling places that have been returned during this election. Only used for Two Candidate Preferred results in a Federal Event</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="QuotaProportion" type="xs:double">
+					<xs:annotation>
+						<xs:documentation>Where a quota of votes is required to be elected this value indicates the proportion of the quota represented by the votes. Only used for Senate results in a Federal event. (Not included in lightweight feeds)</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="VotesByTypeStructure">
+		<xs:annotation>
+			<xs:documentation>Simple type to represent votes</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="VoteStructure">
+				<xs:attribute name="Type" type="xs:NMTOKEN" use="required">
+					<xs:annotation>
+						<xs:documentation>The type of the vote, for example ordinary, pre-poll, postal, absent, provisional,</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:group name="VotesGroup">
+		<xs:annotation>
+			<xs:documentation>Group of elements used to represent votes</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Votes" type="VoteStructure">
+				<xs:annotation>
+					<xs:documentation>The number of votes. </xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="VotesByType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Breakdown of the votes by vote type. </xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Votes" type="VotesByTypeStructure" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:group>
+	<xs:group name="SenateGroupsGroup">
+		<xs:annotation>
+			<xs:documentation>Group of elements used to represent Senate groups and their voting tickets</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Group" type="SenateGroupStructure" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>List of Senate groups</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:group>
+	<xs:simpleType name="AustralianStateType">
+		<xs:annotation>
+			<xs:documentation>Simple type to represent the three letter code used to abbreviate the name of a State</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="NSW"/>
+			<xs:enumeration value="VIC"/>
+			<xs:enumeration value="QLD"/>
+			<xs:enumeration value="WA"/>
+			<xs:enumeration value="SA"/>
+			<xs:enumeration value="TAS"/>
+			<xs:enumeration value="ACT"/>
+			<xs:enumeration value="NT"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="DemographicType">
+		<xs:annotation>
+			<xs:documentation>Simple type to indicate if a location is metroplitan or rural</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="Metropolitan"/>
+			<xs:enumeration value="NonMetropolitan"/>
+			<xs:enumeration value="InnerMetropolitan"/>
+			<xs:enumeration value="OuterMetropolitan"/>
+			<xs:enumeration value="Rural"/>
+			<xs:enumeration value="Provincial"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ElectionPhaseType">
+		<xs:annotation>
+			<xs:documentation>Simple type to indicates the phase of the election</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="IssueOfWrit"/>
+			<xs:enumeration value="CloseOfRolls"/>
+			<xs:enumeration value="NominationsLocked"/>
+			<xs:enumeration value="Preload"/>
+			<xs:enumeration value="PreloadLocked"/>
+			<xs:enumeration value="ElectionNight"/>
+			<xs:enumeration value="PostElection"/>
+			<xs:enumeration value="FinalResults"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="HouseEventType">
+		<xs:annotation>
+			<xs:documentation>Simple type to indicate the type of House election either full or by-election</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="Full"/>
+			<xs:enumeration value="ByElection"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="MessageVerbosityType">
+		<xs:annotation>
+			<xs:documentation>Indicates the verbosity of the message</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="Embargo"/>
+			<xs:enumeration value="Preload"/>
+			<xs:enumeration value="Verbose"/>
+			<xs:enumeration value="Light"/>
+			<xs:enumeration value="LightProgress"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="MessageGranularityType">
+		<xs:annotation>
+			<xs:documentation>Indicates the granularity of the message</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="Standard"/>
+			<xs:enumeration value="Detailed"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="PollingPlaceClassificationType">
+		<xs:annotation>
+			<xs:documentation>Simple type to indicate the type of polling place</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="Static"/>
+			<xs:enumeration value="RemoteMobile"/>
+			<xs:enumeration value="SpecialHospital"/>
+			<xs:enumeration value="PrisonMobile"/>
+			<xs:enumeration value="PrePollVotingCentre"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="QuestionType">
+		<xs:annotation>
+			<xs:documentation>Simple type to indicate the type of question, a referendum or a plebiscite</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="Referenduml"/>
+			<xs:enumeration value="Plebiscite"/>
+			<xs:enumeration value="Other"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="SafetyType">
+		<xs:annotation>
+			<xs:documentation>Simple type to indicate the safety of a contest as either safe, fairly safe or marginal</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="FairlySafe"/>
+			<xs:enumeration value="Marginal"/>
+			<xs:enumeration value="Safe"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="SafetyCalculationMethodType">
+		<xs:annotation>
+			<xs:documentation>Simple type to indicate the safety calculation method</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="TwoCandidatePreferred"/>
+			<xs:enumeration value="TwoPartyPreferred"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="SenateEventType">
+		<xs:annotation>
+			<xs:documentation>Simple type to indicate the type Senate election, either Full or Half</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="Full"/>
+			<xs:enumeration value="Half"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="SenateGroupVotingTicketType">
+		<xs:annotation>
+			<xs:documentation>Simple type to represent the two letter senate group voting ticket.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:NMTOKEN">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="2"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="SystemStatusType">
+		<xs:annotation>
+			<xs:documentation>Simple type to indicate the status of Media Feed system</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="Online"/>
+			<xs:enumeration value="Offline"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="WheelChairAccessType">
+		<xs:annotation>
+			<xs:documentation>Simple type to indicate the type of wheel chair access at a polling place</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="Full"/>
+			<xs:enumeration value="Assisted"/>
+			<xs:enumeration value="None"/>
+			<xs:enumeration value="Unknown"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:attributeGroup name="CountProgressAttributes">
+		<xs:annotation>
+			<xs:documentation>The count progress attributes</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="PollingPlacesExpected" type="xs:nonNegativeInteger" use="required">
+			<xs:annotation>
+				<xs:documentation>The total number of count reporting units (polling places) expected to return results for this count in this phase of the election</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="PollingPlacesReturned" type="xs:nonNegativeInteger" use="required">
+			<xs:annotation>
+				<xs:documentation>Indicates the number of count reporting units (polling places)  that have returned results for this count</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:attributeGroup>
+	<xs:attributeGroup name="IndependentAttributes">
+		<xs:annotation>
+			<xs:documentation>The attributes of a candidate to indicate if they are independent or non-affiliated</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="Independent" type="xs:boolean">
+			<xs:annotation>
+				<xs:documentation>Indicates that the candidate is an Independent. If the attribute is not supplied it indicates that the candidate is not independent. (Not included in lightweight feeds)</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="NoAffiliation" type="xs:boolean">
+			<xs:annotation>
+				<xs:documentation>Indicates that the candidate does not have a party affiliation. If the attribute is not supplied it indicates that the candidate is affliated with a party. (Not included in lightweight feeds)</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:attributeGroup>
+</xs:schema>

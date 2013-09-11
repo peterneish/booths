@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  EML 520 Schema - Election Result
+
+  History: 4.0 Edited by Paul Spencer (Boynings Consulting) 2005/2006
+                - major release revision
+
+           5.0 Edited by David RR Webber 2007-02-06
+               - Added additional optional elements for extending ability to report on partial/complete results
+                 and prior election result comparisions along with external press release totals rather than
+                 tabulation result totals.
+  -->
+<xs:schema xmlns="urn:oasis:names:tc:evs:schema:eml" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:oasis:names:tc:evs:schema:eml" elementFormDefault="qualified" attributeFormDefault="unqualified" version="5.0" id="eml-520">
+	<xs:include schemaLocation="emlcore-v5-0.xsd"/>
+	<xs:element name="EML">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="EMLstructure">
+					<xs:sequence>
+						<xs:element ref="Result"/>
+					</xs:sequence>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+		<xs:unique name="DisplayOrder">
+			<xs:selector xpath=".//*"/>
+			<xs:field xpath="@DisplayOrder"/>
+		</xs:unique>
+	</xs:element>
+	<xs:element name="Result">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="EventIdentifier" minOccurs="0"/>
+				<xs:element name="Election" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="ElectionIdentifier"/>
+							<xs:element name="Contest" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element ref="ContestIdentifier"/>
+										<xs:element ref="CountQualifier" minOccurs="0"/>
+										<xs:element name="Selection" maxOccurs="unbounded">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:choice>
+														<xs:sequence>
+															<xs:element ref="Candidate"/>
+															<xs:element ref="AffiliationIdentifier" minOccurs="0"/>
+														</xs:sequence>
+														<xs:element ref="AffiliationIdentifier"/>
+														<xs:element ref="ReferendumOptionIdentifier"/>
+													</xs:choice>
+													<xs:element name="Votes" type="xs:positiveInteger" minOccurs="0"/>
+													<xs:choice>
+														<xs:sequence>
+															<xs:element name="Ranking" type="xs:positiveInteger"/>
+															<xs:element name="Elected" type="YesNoType" minOccurs="0"/>
+														</xs:sequence>
+														<xs:element name="Elected" type="YesNoType"/>
+													</xs:choice>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="ResultReporting" maxOccurs="1" minOccurs="0">
+					<xs:complexType id="ResultID">
+						<xs:attribute name="reportType">
+							
+						</xs:attribute>
+						<xs:attribute name="resultType">
+							
+						</xs:attribute>
+					</xs:complexType>
+				</xs:element>
+				<xs:any namespace="##other" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="AuditInformation" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  EML 444/460 Schema - Includes
+
+  History: 4.0 Edited by Paul Spencer (Boynings Consulting) 2005/2006
+                - major release revision
+
+           5.0 Edited by David RR Webber (OVS) 2007-02-13
+                - ReportUnitIdentifier made repeatable
+                - Category attribute added
+           5.0 Edited by David RR Webber (OVS) 2007-05-25
+                - Changed candidate definition to reference to EML core
+  -->
+<xs:schema targetNamespace="urn:oasis:names:tc:evs:schema:eml" elementFormDefault="qualified" attributeFormDefault="unqualified" version="5.0" id="eml-440-460-include" xmlns="urn:oasis:names:tc:evs:schema:eml" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:include schemaLocation="emlcore-v5-0.xsd"/>
+	<xs:element name="CastVote" type="CastVoteStructure"/>
+	<xs:complexType name="CastVoteStructure">
+		<xs:sequence>
+			<xs:choice minOccurs="0">
+				<xs:element ref="VToken"/>
+				<xs:element ref="VTokenQualified"/>
+			</xs:choice>
+			<xs:element ref="EventIdentifier"/>
+			<xs:element name="Election" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element ref="ElectionIdentifier"/>
+						<xs:element name="Contest">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element ref="ContestIdentifier"/>
+									<xs:element name="Selection" maxOccurs="unbounded">
+										<xs:complexType>
+											<xs:choice minOccurs="0">
+												<xs:sequence>
+													<xs:element name="CandidateIdentifier" type="CandidateIdentifierStructure"/>
+													<xs:element ref="AffiliationIdentifier" minOccurs="0"/>
+												</xs:sequence>
+												<xs:sequence>
+													<xs:element ref="AffiliationIdentifier"/>
+													<xs:element name="Candidate" minOccurs="0" maxOccurs="unbounded">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element name="CandidateIdentifier" type="CandidateIdentifierStructure"/>
+															</xs:sequence>
+															<xs:attribute name="Value" type="VotingValueType" use="optional"/>
+														</xs:complexType>
+													</xs:element>
+												</xs:sequence>
+												<xs:element name="PersonalIdentifier" type="xs:token"/>
+												<xs:element name="WriteinCandidateName" type="xs:token"/>
+												<xs:element ref="ReferendumOptionIdentifier"/>
+											</xs:choice>
+											<xs:attribute name="Value" type="VotingValueType" use="optional"/>
+											<xs:attribute name="ShortCode" type="ShortCodeType" use="optional"/>
+										</xs:complexType>
+									</xs:element>
+									<xs:element ref="Seal" minOccurs="0"/>
+								</xs:sequence>
+								<xs:attribute name="Spoilt" type="xs:token" use="optional"/>
+								<xs:attribute name="Category" type="xs:token" use="optional"/>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element ref="BallotIdentifier" minOccurs="0"/>
+			<xs:element ref="ReportingUnitIdentifier" minOccurs="0" maxOccurs="unbounded" />
+			<xs:any namespace="##other" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="Spoilt" type="xs:token" use="optional"/>
+		<xs:attribute name="Category" type="xs:token" use="optional"/>
+	</xs:complexType>
+</xs:schema>

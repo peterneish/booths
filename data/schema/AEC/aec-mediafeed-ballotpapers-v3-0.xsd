@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2007 sp1 (http://www.altova.com) by Stewart Kerr (Australian Electoral Commission) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.aec.gov.au/xml/schema/mediafeed" xmlns:eml="urn:oasis:names:tc:evs:schema:eml" targetNamespace="http://www.aec.gov.au/xml/schema/mediafeed" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:include schemaLocation="aec-mediafeed-core-v3-0.xsd"/>
+	<xs:import namespace="urn:oasis:names:tc:evs:schema:eml" schemaLocation="../eml/emlcore-v5-0.xsd"/>
+	<xs:element name="MediaFeed">
+		<xs:annotation>
+			<xs:documentation>Comment describing your root element</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="MediaFeedStructure">
+					<xs:sequence>
+						<xs:element ref="BallotPapers"/>
+					</xs:sequence>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="BallotPapers">
+		<xs:annotation>
+			<xs:documentation>The ballot papers for a Federal election</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="eml:EventIdentifier"/>
+				<xs:element name="House" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Election">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element ref="eml:ElectionIdentifier"/>
+										<xs:element name="Date" type="eml:ComplexDateRangeStructure" minOccurs="0" maxOccurs="unbounded"/>
+										<xs:element name="Contests">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="Contest" maxOccurs="unbounded">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element ref="eml:ContestIdentifier"/>
+																<xs:element ref="PollingDistrictIdentifier" minOccurs="0">
+																	<xs:annotation>
+																		<xs:documentation>Identification of the polling district in which the contest was held. For a federal election this relates the contest to the federal division for the contest (Not included in lightweight feeds)</xs:documentation>
+																	</xs:annotation>
+																</xs:element>
+																<xs:element name="BallotPaper">
+																	<xs:complexType>
+																		<xs:sequence>
+																			<xs:element name="Candidate" maxOccurs="unbounded">
+																				<xs:complexType>
+																					<xs:sequence>
+																						<xs:element ref="eml:CandidateIdentifier"/>
+																						<xs:element ref="eml:AffiliationIdentifier" minOccurs="0"/>
+																						<xs:element name="BallotPosition" type="xs:nonNegativeInteger">
+																							<xs:annotation>
+																								<xs:documentation>Inidcates the candidate's position on the ballot paper.</xs:documentation>
+																							</xs:annotation>
+																						</xs:element>
+																					</xs:sequence>
+																					<xs:attributeGroup ref="IndependentAttributes"/>
+																				</xs:complexType>
+																			</xs:element>
+																			<xs:any namespace="##other" minOccurs="0">
+																				<xs:annotation>
+																					<xs:documentation>Allows for customisation of the ballot paper</xs:documentation>
+																				</xs:annotation>
+																			</xs:any>
+																		</xs:sequence>
+																		<xs:attribute name="Id" type="xs:NMTOKEN">
+																			<xs:annotation>
+																				<xs:documentation>Unique ID for the Ballot paper</xs:documentation>
+																			</xs:annotation>
+																		</xs:attribute>
+																		<xs:attribute name="DisplayOrder" type="xs:positiveInteger" use="optional">
+																			<xs:annotation>
+																				<xs:documentation>The order in which ballot papers are displayed if presented on a single screen</xs:documentation>
+																			</xs:annotation>
+																		</xs:attribute>
+																	</xs:complexType>
+																</xs:element>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="Senate" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Election">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element ref="eml:ElectionIdentifier"/>
+										<xs:element name="Date" type="eml:ComplexDateRangeStructure" minOccurs="0" maxOccurs="unbounded"/>
+										<xs:element name="Contests">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="Contest" maxOccurs="unbounded">
+														<xs:complexType>
+															<xs:sequence>
+																<xs:element ref="eml:ContestIdentifier"/>
+																<xs:element ref="StateIdentifier" minOccurs="0"/>
+																<xs:element name="BallotPaper">
+																	<xs:complexType>
+																		<xs:sequence>
+																			<xs:element name="Column" maxOccurs="unbounded">
+																				<xs:annotation>
+																					<xs:documentation>Represents a column on the Senate Ballot Paper</xs:documentation>
+																				</xs:annotation>
+																				<xs:complexType>
+																					<xs:choice>
+																						<xs:element name="Group">
+																							<xs:complexType>
+																								<xs:sequence>
+																									<xs:element name="GroupIdentifier" type="SenateGroupIdentifierStructure"/>
+																									<xs:element name="Candidate" maxOccurs="unbounded">
+																										<xs:annotation>
+																											<xs:documentation>The list of candidates in the group</xs:documentation>
+																										</xs:annotation>
+																										<xs:complexType>
+																											<xs:sequence>
+																												<xs:element ref="eml:CandidateIdentifier"/>
+																												<xs:element ref="eml:AffiliationIdentifier" minOccurs="0"/>
+																												<xs:element name="BallotPosition" type="xs:nonNegativeInteger">
+																													<xs:annotation>
+																														<xs:documentation>Inidcates the candidate's position on the ballot paper.</xs:documentation>
+																													</xs:annotation>
+																												</xs:element>
+																											</xs:sequence>
+																											<xs:attributeGroup ref="IndependentAttributes"/>
+																										</xs:complexType>
+																									</xs:element>
+																								</xs:sequence>
+																							</xs:complexType>
+																						</xs:element>
+																						<xs:element name="UngroupedCandidate" maxOccurs="unbounded">
+																							<xs:annotation>
+																								<xs:documentation>The list of ungrouped candidates in the column</xs:documentation>
+																							</xs:annotation>
+																							<xs:complexType>
+																								<xs:sequence>
+																									<xs:element ref="eml:CandidateIdentifier"/>
+																									<xs:element ref="eml:AffiliationIdentifier" minOccurs="0"/>
+																									<xs:element name="BallotPosition" type="xs:nonNegativeInteger">
+																										<xs:annotation>
+																											<xs:documentation>Inidcates the candidate's position on the ballot paper.</xs:documentation>
+																										</xs:annotation>
+																									</xs:element>
+																								</xs:sequence>
+																								<xs:attributeGroup ref="IndependentAttributes"/>
+																							</xs:complexType>
+																						</xs:element>
+																					</xs:choice>
+																					<xs:attribute name="Id" type="xs:NMTOKEN">
+																						<xs:annotation>
+																							<xs:documentation>Unique ID for the ballot paper column</xs:documentation>
+																						</xs:annotation>
+																					</xs:attribute>
+																					<xs:attribute name="DisplayOrder" type="xs:positiveInteger" use="optional">
+																						<xs:annotation>
+																							<xs:documentation>The order in which the column should appear on the  ballot paper</xs:documentation>
+																						</xs:annotation>
+																					</xs:attribute>
+																				</xs:complexType>
+																			</xs:element>
+																			<xs:any namespace="##other" minOccurs="0">
+																				<xs:annotation>
+																					<xs:documentation>Allows for customisation of the ballot paper</xs:documentation>
+																				</xs:annotation>
+																			</xs:any>
+																		</xs:sequence>
+																		<xs:attribute name="Id" type="xs:NMTOKEN">
+																			<xs:annotation>
+																				<xs:documentation>Unique ID for the Ballot paper</xs:documentation>
+																			</xs:annotation>
+																		</xs:attribute>
+																		<xs:attribute name="DisplayOrder" type="xs:positiveInteger" use="optional">
+																			<xs:annotation>
+																				<xs:documentation>The order in which ballot papers are displayed if presented on a single screen</xs:documentation>
+																			</xs:annotation>
+																		</xs:attribute>
+																	</xs:complexType>
+																</xs:element>
+															</xs:sequence>
+														</xs:complexType>
+													</xs:element>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="Referendum" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="BallotPaper" maxOccurs="unbounded">
+								<xs:annotation>
+									<xs:documentation>A ballot paper definition for a Federal election</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="Election" maxOccurs="unbounded">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element ref="eml:ElectionIdentifier"/>
+													<xs:element name="Date" type="eml:ComplexDateRangeStructure" minOccurs="0" maxOccurs="unbounded"/>
+													<xs:element ref="eml:Proposal"/>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+									<xs:attribute name="Id" type="xs:NMTOKEN">
+										<xs:annotation>
+											<xs:documentation>Unique ID for the Ballot paper</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+									<xs:attribute name="DisplayOrder" type="xs:positiveInteger" use="optional">
+										<xs:annotation>
+											<xs:documentation>The order in which ballot papers are displayed if presented on a single screen</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>
