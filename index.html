@@ -72,10 +72,11 @@
 		<div id="configArea">
 			<h2>Notes</h2>
 			This is a demonstration of a canvas heatmap gmaps overlay<br /><br />
-			<strong>Note: this is an early release of the heatmap layer. Please feel free to <a href="https://github.com/pa7/heatmap.js" target="_blank">contribute patches</a>. (e.g: correct datapoint pixels after dragrelease (in draw))</strong>
-			<div id="tog" class="btn">Toggle HeatmapOverlay</div>
 			<div id="ALP" class="btn party">ALP</div>
-			<div id="PUP" class="btn party">PUP</div>
+			<div id="GRN" class="btn party">Greens</div>
+			<div id="LP" class="btn party">Liberal</div>
+			<div id="NP" class="btn party">National</div>
+			<div id="PUP" class="btn party">Palmer</div>
 		</div>
 			
 <div style="position:absolute;width:940px;top:750px;text-align:center;"><a href="http://www.patrick-wied.at/static/heatmapjs/">heatmap.js</a> by <a href="http://www.patrick-wied.at" target="_blank">Patrick Wied</a></div>
@@ -112,16 +113,12 @@ function init(){
 	manager = new MarkerManager(map);
 	infowindow = new google.maps.InfoWindow({ content: "holding..."});
 	
-	
-	
-	document.getElementById("tog").onclick = function(){
-		heatmap.toggle();
-	};
 
-			
-	document.getElementById("ALP").onclick = function(){
-			loadHeatMap("ALP");
-	};	   
+	$(".party").click(function(){
+		loadHeatMap( $(this).attr("id"));
+		
+	});	
+	
 			
 
 	google.maps.event.addListenerOnce(map, "idle", function(){
