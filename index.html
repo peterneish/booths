@@ -116,19 +116,19 @@ window.onload = function(){
 		heatmap.toggle();
 	};
 
-	var data = $.getJSON("data.json", function(json) {
+	var data = $.getJSON("./data/GRN.json", function(json) {
 		           console.log(json); // this will show the info it in firebug console
+			// this is important, because if you set the data set too early, the latlng/pixel projection doesn't work
+			google.maps.event.addListenerOnce(map, "idle", function(){
+			heatmap.setDataSet(json);
+	});
 			   });	   
 	
 	var testData={
 		max: 10, data: [ {lat: -37.5, lng: 140.1, count: 32} ] 
     	};
-    
+
 	
-	// this is important, because if you set the data set too early, the latlng/pixel projection doesn't work
-	google.maps.event.addListenerOnce(map, "idle", function(){
-		heatmap.setDataSet(testData);
-	});
 };
 
 </script>
