@@ -11,14 +11,16 @@ use Data::Dumper;
 use XML::LibXML;
 use XML::LibXML::XPathContext; 
 
-
 my %booths;
+my %parties; # keep track of parties for dumping our files later
 
 # first read in the booth information and load into a hash
 
 $csv = Text::CSV->new();
 
 open (BOOTHS, "<", "booths.csv")  or die $!;
+
+print "\n\nParsing booths...";
 
 while(<BOOTHS>){
 	# skip header row
@@ -45,6 +47,8 @@ while(<BOOTHS>){
 		# print Dumper($booths);
 
 
+print "\n\nParsing results...";
+
 
 # now we parse the xml and associate the lat and long 
 # with the booth results
@@ -63,8 +67,6 @@ foreach my $contest (@contests){
 
 	my %candidate_details;
 
-	print $xpc->findvalue('./eml:ContestIdentifier/eml:ContestName', $contest);
-	print "\n";
 
 	foreach my $candidate ($xpc->findnodes('./ns:FirstPreferences/ns:Candidate', $contest)){
 		my $id = $xpc->findvalue('.//eml:CandidateIdentifier/@Id', $candidate);	
@@ -86,6 +88,7 @@ foreach my $contest (@contests){
 		$pp_id = $xpc->findvalue('./ns:PollingPlaceIdentifier/@Id', $pp);	
 		
 		#print "Polling place id: $pp_id \n";
+		my @can_details = ();
 		
 		# now loop through candidates for each polling place
 		foreach my $pp_candidate ($xpc->findnodes('./ns:FirstPreferences/ns:Candidate', $pp)){
@@ -96,43 +99,107 @@ foreach my $contest (@contests){
 			$pp_shortcode = $candidate_details{$pp_can_id}->{shortcode};
 			if($pp_shortcode){
 				$booths{$pp_id}->{$pp_shortcode} = $pp_votes;	
+				$parties{$pp_shortcode}++;
 			}
+			
+
+			push (@can_details, {"name"  => $candidate_details{$pp_can_id}->{name}, 
+			            "party" => $candidate_details{$pp_can_id}->{party},
+			            "vote"  => $pp_votes});
 
 		}
+	
+		@{$booths{$pp_id}->{candidates}} = @can_details;
 		
 	}
-	print "-----------\n\n";
 
 }
 
+print "\n\nGenerating heatmap data...";
 
-# write to some json files
-open GRN, ">", "GRN.json" or die $!;
+# now write out our json data files for heat map
+foreach my $shortcode (keys %parties){
 
-@grn;
+	my @data;
+	$maxcount = 0;
 
-foreach my $key (keys %booths){
-	if($booths{$key}->{name}){
-		if ($booths{$key}->{"GRN"} && $booths{$key}->{lat} && $booths{$key}->{lng}){
+	# don't bother if it is a small party and not in many booths
+	next if $parties{$shortcode} < 200;
+
+	print "processing $shortcode ...\n";
+
+
+	foreach my $key (keys %booths){
+		if($booths{$key}->{$shortcode} && $booths{$key}->{lat} && $booths{$key}->{lng}){
 			$line =  '{ "lat": '   . $booths{$key}->{lat}
-			       . ', "lng": '   . $booths{$key}->{lng}
-			       . ', "count": ' . $booths{$key}->{GRN}	
-			       . '}';
-			push(@grn, $line);
-		}
-		print $booths{$key}->{name};
-		print " GRN: ". $booths{$key}->{"GRN"};
-		print " ALP: ". $booths{$key}->{"ALP"};
-		print " LP: ". $booths{$key}->{"LP"};
-		print "\n\n";
+                               . ', "lng": '   . $booths{$key}->{lng}
+                               . ', "count": ' . $booths{$key}->{$shortcode}
+                               . '}';
+
+			push(@data, $line);
+			$maxcount = $booths{$key}->{$shortcode} if $booths{$key}->{$shortcode} > $maxcount;
+		}	
 	}
+
+	print "found " . @data . " booths, max is ". $maxcount. "\n";
+
+	# open a data file
+	my $file = "$shortcode.json";
+	open my $fh, '>', $file or die "Can't open output file: $!";
+		print $fh '{"max": '. $maxcount .', "data": [';
+		print $fh join ",", @data;
+		print $fh ']}';
+
+	close $fh;
 }
 
-print GRN '{"max": 50, "data": [';
-print GRN join ",", @grn;
-print GRN ']}';
 
-close GRN;
+print "\n\nGenerating booth information...";
+# and write our geoJSON details for the booths
+
+my @features;
+foreach $key (keys %booths){
+
+	
+	if ($booths{$key}->{lat} && $booths{$key}->{lng}){
+		$feature = '{';
+		$feature.= '"type": "Feature", "geometry": ';
+		$feature.=		 '{"type": "Point", "coordinates": [';
+		$feature.= 		$booths{$key}->{lng} .',' . $booths{$key}->{lat};
+		$feature.=   ']},';
+		$feature.=  '"properties": {';
+		$feature.= '"name": "' . $booths{$key}->{name} . '",'	;
+		$feature.= '"candidates": ';
+	
+		my @cans;
+
+		foreach my $can (@{$booths{$key}->{candidates}}){
+			push(@cans, '"' . $can->{name} . ' (' . $can->{party} . ') '. $can->{vote}. '%"');
+		}
+		$feature.= '[';
+		$feature.= join ',', @cans;
+		$feature.= ']';
+
+		$feature.=  '}';
+		$feature.= '}';
+
+		push(@features, $feature);
+	}
+
+}
+open GEO, ">", "booths.json" or die "Can't open output file: $!";
+
+print GEO '{ "type": "FeatureCollection", "features": [';
+print GEO join ',', @features;
+print GEO ']}';
+
+close GEO;
+
+print "Done.\n\n";
+
+
+
+
 1;
 
 
