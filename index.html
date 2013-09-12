@@ -70,8 +70,7 @@
 			
 		</div>
 		<div id="configArea">
-			<h2>Notes</h2>
-			This is a demonstration of a canvas heatmap gmaps overlay<br /><br />
+			<p>Click on a party below.</p><br /><br />
 			<div id="ALP" class="btn party">ALP</div>
 			<div id="GRN" class="btn party">Greens</div>
 			<div id="LP" class="btn party">Liberal</div>
@@ -79,7 +78,7 @@
 			<div id="PUP" class="btn party">Palmer</div>
 		</div>
 			
-<div style="position:absolute;width:940px;top:750px;text-align:center;"><a href="http://www.patrick-wied.at/static/heatmapjs/">heatmap.js</a> by <a href="http://www.patrick-wied.at" target="_blank">Patrick Wied</a></div>
+<div style="position:absolute;width:940px;top:750px;text-align:center;">Uses <a href="http://www.patrick-wied.at/static/heatmapjs/">heatmap.js</a> by <a href="http://www.patrick-wied.at" target="_blank">Patrick Wied</a></div>
 
 </div>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
@@ -124,7 +123,11 @@ function init(){
 	google.maps.event.addListenerOnce(map, "idle", function(){
 		loadHeatMap("LP");
 		loadBooths();
-	});
+		});
+
+	google.maps.event.addListener(map, 'center_changed', function(){
+		heatmap.draw();
+	});	
 
 	
 }
