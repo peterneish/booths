@@ -96,7 +96,7 @@ function init(){
 
 	var myLatlng = new google.maps.LatLng(-28.75,133.70);
 	var myOptions = {
-	  zoom: 8,
+	  zoom: 4,
 	  center: myLatlng,
 	  mapTypeId: google.maps.MapTypeId.ROADMAP,
 	  disableDefaultUI: false,
@@ -120,50 +120,15 @@ function init(){
 
 			
 	document.getElementById("ALP").onclick = function(){
-		var data = $.getJSON("./data/ASXP.json", function(json) {
-				heatmap.setDataSet(json);
-		});	   
+			loadHeatMap("ALP");
+	};	   
 			
-	};
-
-	google.maps.event.addListener(manager, 'loaded', function() {
-
-	    $.getJSON("./data/booths.json", function(results){
-		for (var i = 0; i < results.features.length; i++) {
-			console.log(results.features[i]);
-		
-			// build the html from the candidates properties
-			var whtml =  "<h3>"+ results.features[i].properties.name + "</h3>";
-
-			if(results.features[i].properties.candidates){
-				for (var x=0; x < results.features[i].properties.candidates.length; x++){
-					whtml+= "<p>" + results.features[i].properties.candidates[x].name + "</p>";		
-				}
-			}
-
-    			var coords = results.features[i].geometry.coordinates;
-    			var latLng = new google.maps.LatLng(coords[1], coords[0]);
-    			var marker = new google.maps.Marker({
-      				position: latLng,
-      				title : results.features[i].properties.name,
-				html : whtml
-    			});
-			google.maps.event.addListener(marker, 'click', function(){
-				infowindow.setContent(this.html);
-				infowindow.open(map, this);
-			});
-
-			manager.addMarker(marker, 14);
-
-  		}	
-		manager.refresh();
-	    });
-
-	});
 
 	google.maps.event.addListenerOnce(map, "idle", function(){
-		loadHeatMap("ALP");
+		loadHeatMap("LP");
+		loadBooths();
 	});
+
 	
 }
 
@@ -177,6 +142,41 @@ function loadHeatMap(pty){
         });	   
 
 }
+
+function loadBooths(){
+    $.getJSON("./data/booths.json", function(results){
+	for (var i = 0; i < results.features.length; i++) {
+	
+		// build the html from the candidates properties
+		var whtml =  "<h3>"+ results.features[i].properties.name + "</h3>";
+
+		if(results.features[i].properties.candidates){
+			for (var x=0; x < results.features[i].properties.candidates.length; x++){
+				whtml+= "<p>" + results.features[i].properties.candidates[x] + "</p>";		
+			}
+		}
+
+ 		var coords = results.features[i].geometry.coordinates;
+   		var latLng = new google.maps.LatLng(coords[1], coords[0]);
+    		var marker = new google.maps.Marker({
+      			position: latLng,
+      			title : results.features[i].properties.name,
+			html : whtml
+    		});
+		google.maps.event.addListener(marker, 'click', function(){
+			infowindow.setContent(this.html);
+			infowindow.open(map, this);
+		});
+
+		manager.addMarker(marker, 14);
+
+	} 			
+	manager.refresh();
+    });	
+}
+
+
+
 
 $(document).ready(function(){
 	init();
