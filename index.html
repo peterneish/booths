@@ -139,7 +139,12 @@ function loadHeatMap(pty){
 	else { party = "GRN"; }
 	var data = $.getJSON("./data/" + party + ".json", function(json) {
 		heatmap.setDataSet(json);
-        });	   
+		heatmap.toggle();
+		heatmap.toggle();
+		
+		heatmap.draw();
+        });	  
+	 
 
 }
 
@@ -168,7 +173,7 @@ function loadBooths(){
 			infowindow.open(map, this);
 		});
 
-		manager.addMarker(marker, 14);
+		manager.addMarker(marker, 13);
 
 	} 			
 	manager.refresh();
