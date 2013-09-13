@@ -35,11 +35,15 @@ function initialize() {
 
 
   loadParty("ALP", true);
+  loadParty("FFP");
   loadParty("GRN");
   loadParty("LP");
   loadParty("LNP");
   loadParty("NP");
+  loadParty("ON");
   loadParty("PUP");
+  loadParty("RUA");
+
 
   toggleHeatmapParty("ALP");
 
@@ -66,8 +70,10 @@ function loadParty(party, show){
 	var partydata = [];
 
 	for (var i=0; i < json.data.length; i++){
-		var line = {location: new google.maps.LatLng( json.data[i].lat, json.data[i].lng), weight: json.data[i].count}	;
-		partydata.push(line);	
+		if(json.data[i].count > 0){
+			var line = {location: new google.maps.LatLng( json.data[i].lat, json.data[i].lng), weight: json.data[i].count}	;
+			partydata.push(line);	
+		}
 	}
 
 	
@@ -169,16 +175,25 @@ google.maps.event.addDomListener(window, 'load', initialize);
 <div class="navbar navbar-inverse navbar-fixed-static">
   <div class="navbar-inner">
     <a class="brand" id='title' href='#'>Election Heatmap</a>
+	<div class="btn-group">
       <button class="partychange btn" value="ALP">ALP</button>
+	  <button class="partychange btn" value="FFP">Family First</button>
       <button class="partychange btn" value="GRN">Greens</button>
       <button class="partychange btn" value="LP">Liberal</button>
       <button class="partychange btn" value="LNP">LNP</button>
+	  <button class="partychange btn" value="ON">One Nation</button>
       <button class="partychange btn" value="NP">National</button>
       <button class="partychange btn" value="PUP">Palmer</button>
-      <span class="pull-right"><a class="brand" href="http://twitter.com/peterneish">@peterneish</a></span>
+	  <button class="partychange btn" value="RUA">Rise Up Australia</button>
+	 </div>  
+
+	<div class="pull-right"><a href="">more</a><a class="brand" href="http://twitter.com/peterneish">@peterneish</a></div>
   </div>
 </div>
+<div id="about" class="alert">This is the about section</div>
     <div id="map-canvas"></div>
+	
+	
 	
 	<noscript><img src="map.jpg">nothin to see here without javascript.</script>
 	
