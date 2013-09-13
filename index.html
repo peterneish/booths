@@ -47,14 +47,21 @@ function initialize() {
 
   toggleHeatmapParty("ALP");
 
-  $(".partychange").click(function(){
-	toggleHeatmapParty($(this).attr("value"));
+  $("ul.partychange a").click(function(){
+	  toggleHeatmapParty($(this).attr("data-party"));
+	  $('ul.partychange li').removeClass('active');
+	  $(this).parent('li').addClass('active');
    });
    
    $('#title').click(function(){
 		revertMap();
 	});	
-   
+	
+	$('.moreinfo').click(function(){
+		toggleInfo();
+	});
+	
+  
    loadBooths();
 
 
@@ -118,18 +125,20 @@ function revertMap(){
 
 function toggleHeatmapParty(party){
 
-	$.each(heatmaps, function(key, value){
+	  $.each(heatmaps, function(key, value){
 		if (key == party){
 			value.setMap(map);
 		}
 		else{
 			value.setMap(null);
 		}
-	});
+	  });
+}
 
-	// and highlight the button
-	$("button.partychange").removeClass("btn-info");
-	$("button.partychange[value='" + party + "']").addClass("btn-info");
+function toggleInfo(){
+    $('.moreinfo').parent('li').toggleClass('active');
+	$('#about').toggle();
+	$('#map-canvas').toggleClass("lower");
 }
 
 
@@ -172,25 +181,50 @@ google.maps.event.addDomListener(window, 'load', initialize);
 
   <body>
 
-<div class="navbar navbar-inverse navbar-fixed-static">
+<div class="navbar  navbar-fixed-static">
   <div class="navbar-inner">
     <a class="brand" id='title' href='#'>Election Heatmap</a>
-	<div class="btn-group">
-      <button class="partychange btn" value="ALP">ALP</button>
-	  <button class="partychange btn" value="FFP">Family First</button>
-      <button class="partychange btn" value="GRN">Greens</button>
-      <button class="partychange btn" value="LP">Liberal</button>
-      <button class="partychange btn" value="LNP">LNP</button>
-	  <button class="partychange btn" value="ON">One Nation</button>
-      <button class="partychange btn" value="NP">National</button>
-      <button class="partychange btn" value="PUP">Palmer</button>
-	  <button class="partychange btn" value="RUA">Rise Up Australia</button>
-	 </div>  
-
-	<div class="pull-right"><a href="">more</a><a class="brand" href="http://twitter.com/peterneish">@peterneish</a></div>
+	  <ul class="nav partychange">
+      <li class="active"><a href="#" data-party="ALP">ALP</a></li>
+	  <li><a href="#" data-party="FFP">Family First</a></li>
+      <li><a href="#" data-party="GRN">Greens</a></</li>
+      <li><a href="#" data-party="LP">Liberal</a></li>
+      <li><a href="#" data-party="LNP">LNP</a></li>
+	  <li><a href="#" data-party="ON">One Nation</a></li>
+      <li><a href="#" data-party="NP">National</a></li>
+      <li><a href="#" data-party="PUP">Palmer</a></li>
+	  <li><a href="#" data-party="RUA">Rise Up Australia</a></li>
+	  <li class="divider-vertical"></li>
+	  </ul>
+	  <ul class="nav">
+	  <li><a class="moreinfo" href="#">More Info</a></li>
+	  </ul>
+	<div class="pull-right"><a class="brand" href="http://twitter.com/peterneish">@peterneish</a></div>
   </div>
+  
+  
 </div>
-<div id="about" class="alert">This is the about section</div>
+	<div id="about" class="span-9" style="display: none;">
+	<h3>About <a class="btn btn-primary btn-large moreinfo pull-right">Done</a></h3>
+	<p>This map displays votes for parties as a <a href="http://en.wikipedia.org/wiki/Heat_map">heat map</a>. It uses data at the resolution of the polling booth rather than electorate.
+    This means that you can zoom in to see how strong a vote was at an electorate.  If you zoom
+	in far enough you can also click on individual booths to get exact percentages of first preferences for each candidate.
+    </p>
+	
+	<h4>Limitations</h4>
+	<p>Data is based on first preferences only. Because of the way heatmaps work, if booths are closer together the intensity increases, so to some extent the heat map is determined by the 
+	layout of the booths. However, distinct patterns are discernble if you explore the data.
+	</p>
+	<p>Absentee voting at capital cities booths are mapped at the booth rather than in the electorate that the vote was for, so capital cities tend to show high results for every party.
+	</p>
+	<p>Data is taken from the <a href="http://www.aec.gov.au/media/mediafeed/">Australian Electoral Commission</a>.</p>
+	
+	
+	
+
+	<p>Written by <a href="http://twitter.com/peterneish">Peter Neish</a> and code is available at <a href="http://github.com/peterneish/booths">GitHub</a>.
+	</p>
+	</div>
     <div id="map-canvas"></div>
 	
 	

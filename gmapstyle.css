@@ -29,4 +29,12 @@ html, body {
   }
 }
 
+#map-canvas.lower {
+	margin-top:500px;
+}
+
+#about {
+	margin: 0 20%;
+}
+
 
