@@ -16,18 +16,22 @@
 
 var map, pointarray, heatmap;
 var heatmaps = {};
-
+var defaultzoom = 4;
+var defaultcentre = new google.maps.LatLng(-28.75,133.70);
 
 
 function initialize() {
   var mapOptions = {
-    zoom: 4,
-    center: new google.maps.LatLng(-28.75,133.70),
+    zoom: defaultzoom,
+    center: defaultcentre,
     mapTypeId: google.maps.MapTypeId.ROADMAP
   };
 
   map = new google.maps.Map(document.getElementById('map-canvas'),
       mapOptions);
+	  
+  manager = new MarkerManager(map);
+  infowindow = new google.maps.InfoWindow({ content: "holding..."});
 
 
   loadParty("ALP", true);
@@ -42,6 +46,12 @@ function initialize() {
   $(".partychange").click(function(){
 	toggleHeatmapParty($(this).attr("value"));
    });
+   
+   $('#title').click(function(){
+		revertMap();
+	});	
+   
+   loadBooths();
 
 
 
@@ -60,10 +70,30 @@ function loadParty(party, show){
 		partydata.push(line);	
 	}
 
+	
+	  var gradient = [
+    'rgba(0, 255, 255, 0)',
+    'rgba(0, 255, 255, 1)',
+    'rgba(0, 127, 255, 1)',
+    'rgba(0, 63, 255, 1)',
+    'rgba(0, 0, 255, 1)',
+    'rgba(0, 0, 191, 1)',
+    'rgba(0, 0, 159, 1)',
+    'rgba(0, 0, 127, 1)',
+    'rgba(127, 0, 63, 1)',
+    'rgba(191, 0, 31, 1)',
+    'rgba(255, 0, 0, 1)'
+  ];
+  
+
+  
+  
 	heatmaps[party] = new google.maps.visualization.HeatmapLayer({
 	   data: partydata ,
-           opactity: 0.9,
-	   maxIntensity: 60,
+       opactity: 0.9,
+	   maxIntensity: json.max,
+	   radius: 20,
+	   gradient: gradient,
 	   dissipating: true 
 	});
 
@@ -72,6 +102,11 @@ function loadParty(party, show){
 	}
 	
   });
+}
+
+function revertMap(){
+	map.setZoom(defaultzoom);
+	map.setCenter(defaultcentre);
 }
 
 
@@ -92,12 +127,36 @@ function toggleHeatmapParty(party){
 }
 
 
-function changeRadius() {
-  heatmap.setOptions({radius: heatmap.get('radius') ? null : 20});
-}
+function loadBooths(){
+    $.getJSON("./data/booths.json", function(results){
+	for (var i = 0; i < results.features.length; i++) {
+	
+		// build the html from the candidates properties
+		var whtml =  "<h3>"+ results.features[i].properties.name + "</h3>";
 
-function changeOpacity() {
-  heatmap.setOptions({opacity: heatmap.get('opacity') ? null : 0.2});
+		if(results.features[i].properties.candidates){
+			for (var x=0; x < results.features[i].properties.candidates.length; x++){
+				whtml+= "<p>" + results.features[i].properties.candidates[x] + "</p>";		
+			}
+		}
+
+ 		var coords = results.features[i].geometry.coordinates;
+   		var latLng = new google.maps.LatLng(coords[1], coords[0]);
+    		var marker = new google.maps.Marker({
+      			position: latLng,
+	   			title : results.features[i].properties.name,
+			    html : whtml
+			});
+		google.maps.event.addListener(marker, 'click', function(){
+			infowindow.setContent(this.html);
+			infowindow.open(map, this);
+		});
+
+		manager.addMarker(marker, 13);
+
+	} 			
+	manager.refresh();
+    });	
 }
 
 google.maps.event.addDomListener(window, 'load', initialize);
@@ -109,7 +168,7 @@ google.maps.event.addDomListener(window, 'load', initialize);
 
 <div class="navbar navbar-inverse navbar-fixed-static">
   <div class="navbar-inner">
-    <span class="brand">Election Heatmap</span>
+    <a class="brand" id='title' href='#'>Election Heatmap</a>
       <button class="partychange btn" value="ALP">ALP</button>
       <button class="partychange btn" value="GRN">Greens</button>
       <button class="partychange btn" value="LP">Liberal</button>

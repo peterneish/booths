@@ -15,6 +15,10 @@ html, body {
     margin-top:40px;
 }
 
+#map-canvas img, #map_canvas img {
+  max-width: none;
+}
+
 @media print {
   html, body {
     height: auto;
