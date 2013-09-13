@@ -77,7 +77,6 @@ function loadParty(party, show){
 
 function toggleHeatmapParty(party){
 
-	console.log("Changing party to " + party);
 	$.each(heatmaps, function(key, value){
 		if (key == party){
 			value.setMap(map);
@@ -107,14 +106,18 @@ google.maps.event.addDomListener(window, 'load', initialize);
   </head>
 
   <body>
-    <div id="panel">
+
+<div class="navbar navbar-inverse navbar-fixed-static">
+  <div class="navbar-inner">
+    <span class="brand">Election Heatmap</span>
       <button class="partychange btn" value="ALP">ALP</button>
       <button class="partychange btn" value="GRN">Greens</button>
       <button class="partychange btn" value="LP">Liberal</button>
       <button class="partychange btn" value="LNP">LNP</button>
       <button class="partychange btn" value="NP">National</button>
       <button class="partychange btn" value="PUP">Palmer</button>
-    </div>
+  </div>
+</div>
     <div id="map-canvas"></div>
   </body>
 </html>

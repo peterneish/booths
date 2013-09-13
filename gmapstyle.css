@@ -5,7 +5,14 @@ html, body {
 }
 
 #map-canvas, #map_canvas {
-  height: 100%;
+    display:block;
+    position:absolute;
+    height:auto;
+    bottom:0;
+    top:0;
+    left:0;
+    right:0;
+    margin-top:40px;
 }
 
 @media print {
@@ -18,13 +25,4 @@ html, body {
   }
 }
 
-#panel {
-  position: absolute;
-  top: 5px;
-  left: 50%;
-  margin-left: -180px;
-  z-index: 5;
-  background-color: #fff;
-  padding: 5px;
-  border: 1px solid #999;
-}
+
