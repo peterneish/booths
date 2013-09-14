@@ -1,10 +1,12 @@
-html, body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-}
 
-#map-canvas, #map_canvas {
+.mapcanvas,
+.mapcanvas * { .box-sizing(content-box); }
+
+/* Optional responsive image override */
+img { max-width: none; }
+
+
+#map-canvas {
     display:block;
     position:absolute;
     height:auto;
@@ -12,10 +14,10 @@ html, body {
     top:0;
     left:0;
     right:0;
-    margin-top:80px;
+    margin-top:50px; 
 }
 
-#map-canvas img, #map_canvas img {
+#map-canvas img {
   max-width: none;
 }
 
@@ -24,7 +26,7 @@ html, body {
     height: auto;
   }
 
-  #map-canvas, #map_canvas {
+  #map-canvas {
     height: 650px;
   }
 }
