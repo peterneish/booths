@@ -41,8 +41,11 @@ img { max-width: none; }
 
 #partyinfo {
 	color: #fff;
-	
-	
 }
+
+.spinner {
+   margin-left: 50px 5px;
+}   
+	
 
 
