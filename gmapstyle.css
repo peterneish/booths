@@ -26,7 +26,7 @@ img { max-width: none; }
     height: auto;
   }
 
-  #map-canvas {
+#map-canvas {
     height: 650px;
   }
 }
@@ -48,4 +48,8 @@ img { max-width: none; }
 }   
 	
 
-
+.dropdown-menu {
+    max-height: 500px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
