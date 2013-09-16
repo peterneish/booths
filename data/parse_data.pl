@@ -164,28 +164,20 @@ foreach $key (keys %booths){
 	
 	if ($booths{$key}->{lat} && $booths{$key}->{lng}){
 		$feature = '{';
-		$feature.= '"type": "Feature", "geometry": ';
-		$feature.=		 '{"type": "Point", "coordinates": [';
-		$feature.= 		$booths{$key}->{lng} .',' . $booths{$key}->{lat};
-		$feature.=   ']},';
-		$feature.=  '"properties": {';
-		$feature.= '"name": "' . $booths{$key}->{name} . '",'	;
-		$feature.= '"candidates": ';
+		$feature.= '"coord":[' . $booths{$key}->{lat} .',' . $booths{$key}->{lng};
+		$feature.=   '],';
+		$feature.= '"name": "' . $booths{$key}->{name} . '",';
+		$feature.= '"res": ';
 	
 		my @cans;
-		my @shortcans;
 
 		foreach my $can (@{$booths{$key}->{candidates}}){
-			push(@cans, '"' . $can->{name} . ' (' . $can->{party} . ') '. $can->{vote}. '%"');
-		}
-		foreach my $can (@{$booths{$key}->{candidates}}){
-			push(@shortcans, '"'. $can->{party} . ' '. $can->{vote}. '%"');
+			push(@cans, '"'. $can->{party} . ' '. $can->{vote}. '%"');
 		}
 		$feature.= '[';
-		$feature.= join ',', @shortcans;
+		$feature.= join ',', @cans;
 		$feature.= ']';
 
-		$feature.=  '}';
 		$feature.= '}';
 
 		push(@features, $feature);
@@ -194,7 +186,7 @@ foreach $key (keys %booths){
 }
 open GEO, ">", "booths.json" or die "Can't open output file: $!";
 
-print GEO '{ "type": "FeatureCollection", "features": [';
+print GEO '{ "features": [';
 print GEO join ',', @features;
 print GEO ']}';
 
