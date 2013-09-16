@@ -50,6 +50,10 @@ function initialize() {
 	$('.moreinfo').click(function(){
 		toggleInfo();
 	});
+	$('#partyinfo').tooltip();
+	
+	
+	
 	
   
    //loadBooths();
