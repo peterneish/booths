@@ -20,24 +20,29 @@ function initialize() {
 
 
   loadParty("ALP", true);
-  loadParty("DLP");
-  loadParty("FFP");
-  loadParty("GRN");
-  loadParty("LP");
-  loadParty("LNP");
-  loadParty("NP");
-  loadParty("ON");
-  loadParty("PUP");
-  loadParty("RUA");
-  loadParty("ASXP");
+  //loadParty("BTA");
+  //loadParty("DLP");
+  //loadParty("FFP");
+  //loadParty("GRN");
+  //loadParty("KAP");
+  //loadParty("LP");
+  //loadParty("LNP");
+  //loadParty("NP");
+  //loadParty("ON");
+  //loadParty("PUP");
+  //loadParty("RUA");
+  //loadParty("ASXP");
 
 
   toggleHeatmapParty("ALP");
 
   $("ul.partychange a").click(function(){
+  
+      loadParty($(this).attr('data-party'));
 	  toggleHeatmapParty($(this).attr("data-party"));
 	  $('ul.partychange li').removeClass('active');
 	  $(this).parent('li').addClass('active');
+	  
 	  // and add the label
 	  $('#partylabel').text($(this).text());
 	  
@@ -52,22 +57,18 @@ function initialize() {
 	});
 	$('#partyinfo').tooltip();
 	
-	
-	
-	
   
-   //loadBooths();
    // we'll now only load if we zoom in far enough
    google.maps.event.addListener(map, 'zoom_changed', loadBooths);
-
-
 
 }
 
 function loadParty(party, show){
-  $(".spinner").show();
 
-  if(!party) return;
+  if(!party) return;			// bork if no party supplied
+  if(heatmaps[party]) return;   // bork if we have already loaded it
+  
+    $(".spinner").show();
 
   var data = $.getJSON('./data/' + party + '.json', function(json) {
 
@@ -95,9 +96,7 @@ function loadParty(party, show){
     'rgba(255, 0, 0, 1)'
   ];
   
-
-  
-  
+ 
 	heatmaps[party] = new google.maps.visualization.HeatmapLayer({
 	   data: partydata ,
        opactity: 0.9,
@@ -110,6 +109,8 @@ function loadParty(party, show){
 	if(show){
 		heatmaps[party].setMap(map);
 	}
+	
+	toggleHeatmapParty(party);
 	
 	$(".spinner").hide();
 	
