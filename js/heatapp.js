@@ -61,6 +61,7 @@ function initialize() {
 }
 
 function loadParty(party, show){
+  $(".spinner").show();
 
   if(!party) return;
 
@@ -105,6 +106,8 @@ function loadParty(party, show){
 	if(show){
 		heatmaps[party].setMap(map);
 	}
+	
+	$(".spinner").hide();
 	
   });
 }
