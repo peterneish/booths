@@ -51,10 +51,7 @@ function initialize() {
    $('#title').click(function(){
 		revertMap();
 	});	
-	
-	$('.moreinfo').click(function(){
-		toggleInfo();
-	});
+
 	$('#partyinfo').tooltip();
 	
   
