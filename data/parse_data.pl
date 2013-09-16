@@ -158,6 +158,7 @@ print "\n\nGenerating booth information...";
 # and write our geoJSON details for the booths
 
 my @features;
+
 foreach $key (keys %booths){
 
 	
@@ -172,12 +173,16 @@ foreach $key (keys %booths){
 		$feature.= '"candidates": ';
 	
 		my @cans;
+		my @shortcans;
 
 		foreach my $can (@{$booths{$key}->{candidates}}){
 			push(@cans, '"' . $can->{name} . ' (' . $can->{party} . ') '. $can->{vote}. '%"');
 		}
+		foreach my $can (@{$booths{$key}->{candidates}}){
+			push(@shortcans, '"'. $can->{party} . ' '. $can->{vote}. '%"');
+		}
 		$feature.= '[';
-		$feature.= join ',', @cans;
+		$feature.= join ',', @shortcans;
 		$feature.= ']';
 
 		$feature.=  '}';
