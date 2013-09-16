@@ -52,6 +52,7 @@ function initialize() {
 		revertMap();
 	});	
 
+	$('#title').tooltip();
 	$('#partyinfo').tooltip();
 	
   
